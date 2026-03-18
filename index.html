@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PlanAPlant – IoT Balcony Garden Simulator</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <!-- ───────────────────────── HEADER ───────────────────────── -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="logo">
+        <span class="logo-icon">🌱</span>
+        <span class="logo-text">PlanAPlant</span>
+      </div>
+      <nav class="main-nav">
+        <a href="#simulation">Simulation</a>
+        <a href="#materials">Materials</a>
+        <a href="#recipe">Build Guide</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ───────────────────────── HERO ───────────────────────── -->
+  <section class="hero">
+    <div class="container hero-inner">
+      <div class="hero-text">
+        <h1>Grow Smarter with&nbsp;IoT</h1>
+        <p class="hero-sub">
+          PlanAPlant automatically monitors and waters your balcony garden
+          using sensors, a microcontroller, and a smart water pump – so
+          your plants thrive even when you're away.
+        </p>
+        <a href="#simulation" class="btn btn-primary">Launch Simulation</a>
+        <a href="#recipe" class="btn btn-outline">Build Guide</a>
+      </div>
+      <div class="hero-illustration" aria-hidden="true">
+        <div class="pot-scene">
+          <div class="sun-icon">☀️</div>
+          <div class="cloud-icon">☁️</div>
+          <div id="heroPlant" class="plant-hero">🌿</div>
+          <div class="pot">🪴</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────────────────────── SIMULATION ───────────────────────── -->
+  <section id="simulation" class="section sim-section">
+    <div class="container">
+      <h2 class="section-title">IoT Simulation Dashboard</h2>
+      <p class="section-sub">
+        Watch your virtual plant grow in real time. The IoT system reads
+        sensor data every few seconds and triggers the water pump whenever
+        soil moisture drops below the threshold.
+      </p>
+
+      <!-- Sensor cards -->
+      <div class="sensor-grid">
+        <div class="sensor-card" id="cardTemp">
+          <div class="sensor-icon">🌡️</div>
+          <div class="sensor-label">Temperature</div>
+          <div class="sensor-value" id="valTemp">–</div>
+          <div class="sensor-unit">°C</div>
+          <div class="sensor-bar-bg"><div class="sensor-bar" id="barTemp"></div></div>
+        </div>
+        <div class="sensor-card" id="cardHumidity">
+          <div class="sensor-icon">💧</div>
+          <div class="sensor-label">Air Humidity</div>
+          <div class="sensor-value" id="valHumidity">–</div>
+          <div class="sensor-unit">%</div>
+          <div class="sensor-bar-bg"><div class="sensor-bar" id="barHumidity"></div></div>
+        </div>
+        <div class="sensor-card" id="cardMoisture">
+          <div class="sensor-icon">🌱</div>
+          <div class="sensor-label">Soil Moisture</div>
+          <div class="sensor-value" id="valMoisture">–</div>
+          <div class="sensor-unit">%</div>
+          <div class="sensor-bar-bg"><div class="sensor-bar" id="barMoisture"></div></div>
+        </div>
+        <div class="sensor-card" id="cardLight">
+          <div class="sensor-icon">☀️</div>
+          <div class="sensor-label">Light Intensity</div>
+          <div class="sensor-value" id="valLight">–</div>
+          <div class="sensor-unit">lux</div>
+          <div class="sensor-bar-bg"><div class="sensor-bar" id="barLight"></div></div>
+        </div>
+      </div>
+
+      <!-- Pump status -->
+      <div class="pump-status" id="pumpStatus">
+        <span class="pump-icon">🔧</span>
+        <span class="pump-label">Water Pump:</span>
+        <span class="pump-state" id="pumpState">OFF</span>
+        <span class="pump-reason" id="pumpReason"></span>
+      </div>
+
+      <!-- Plant growth visualiser -->
+      <div class="plant-stage-wrapper">
+        <div class="growth-labels">
+          <span>Seed</span><span>Sprout</span><span>Seedling</span>
+          <span>Young Plant</span><span>Mature Plant</span>
+        </div>
+        <div class="growth-bar-bg">
+          <div class="growth-bar" id="growthBar"></div>
+        </div>
+        <div class="plant-display" id="plantDisplay">🌱</div>
+        <div class="plant-stage-label">Stage: <span id="stageLabel">Seed</span></div>
+        <div class="plant-age-label">Day: <span id="dayLabel">0</span></div>
+      </div>
+
+      <!-- Controls -->
+      <div class="sim-controls">
+        <button class="btn btn-primary" id="btnStart">▶ Start Simulation</button>
+        <button class="btn btn-outline" id="btnReset">↺ Reset</button>
+        <label class="speed-label">
+          Speed:
+          <select id="simSpeed">
+            <option value="1">1×</option>
+            <option value="3" selected>3×</option>
+            <option value="5">5×</option>
+            <option value="10">10×</option>
+          </select>
+        </label>
+      </div>
+
+      <!-- Event log -->
+      <div class="event-log-wrapper">
+        <h3>Event Log</h3>
+        <ul class="event-log" id="eventLog">
+          <li class="log-info">Simulation ready. Press <strong>Start</strong> to begin.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────────────────────── MATERIALS ───────────────────────── -->
+  <section id="materials" class="section materials-section">
+    <div class="container">
+      <h2 class="section-title">Materials List</h2>
+      <p class="section-sub">
+        Everything you need to build your own IoT balcony garden.
+      </p>
+
+      <div class="materials-grid">
+
+        <!-- Electronics -->
+        <div class="materials-card">
+          <h3>⚡ Electronics &amp; IoT Hardware</h3>
+          <table class="materials-table">
+            <thead>
+              <tr><th>Item</th><th>Qty</th><th>Notes</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Raspberry Pi 4 (or Arduino Mega)</td><td>1</td><td>Main controller</td></tr>
+              <tr><td>Capacitive Soil Moisture Sensor v1.2</td><td>2</td><td>One per pot</td></tr>
+              <tr><td>DHT22 Temperature &amp; Humidity Sensor</td><td>1</td><td>Weatherproof preferred</td></tr>
+              <tr><td>BH1750 Light Intensity Sensor</td><td>1</td><td>I²C interface</td></tr>
+              <tr><td>5V Submersible Mini Water Pump</td><td>1</td><td>Flow ≥ 120 L/h</td></tr>
+              <tr><td>2-Channel 5V Relay Module</td><td>1</td><td>Controls pump &amp; grow light</td></tr>
+              <tr><td>MicroSD Card (16 GB+)</td><td>1</td><td>OS &amp; data logging</td></tr>
+              <tr><td>Jumper Wires (M-M, M-F, F-F)</td><td>1 set</td><td>Assorted lengths</td></tr>
+              <tr><td>Breadboard (optional)</td><td>1</td><td>For prototyping</td></tr>
+              <tr><td>5V 3A USB-C Power Supply</td><td>1</td><td>For Pi; separate 12V for pump if needed</td></tr>
+              <tr><td>Waterproof Enclosure (IP65)</td><td>1</td><td>Protects electronics from rain</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Garden -->
+        <div class="materials-card">
+          <h3>🌿 Plants, Soil &amp; Garden Supplies</h3>
+          <table class="materials-table">
+            <thead>
+              <tr><th>Item</th><th>Qty</th><th>Notes</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Balcony Planter Box (60 × 20 cm)</td><td>2</td><td>Self-watering bottom preferred</td></tr>
+              <tr><td>Premium Potting Mix</td><td>20 L</td><td>Well-draining, peat-free</td></tr>
+              <tr><td>Perlite</td><td>5 L</td><td>Mix 20% into soil for drainage</td></tr>
+              <tr><td>Slow-release Fertiliser Granules</td><td>200 g</td><td>Apply every 3 months</td></tr>
+              <tr><td>Seeds or Seedlings</td><td>6–8</td><td>Tomato, basil, lettuce, or herbs</td></tr>
+              <tr><td>Drip Irrigation Tubes (4 mm)</td><td>2 m</td><td>Connect pump to pots</td></tr>
+              <tr><td>Drip Emitters / Micro-sprinklers</td><td>4</td><td>One per planting zone</td></tr>
+              <tr><td>Water Reservoir / Bucket (10 L)</td><td>1</td><td>Pump intake source</td></tr>
+              <tr><td>Cable Ties &amp; Mounting Clips</td><td>1 pack</td><td>Secure wires &amp; tubes</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Software -->
+        <div class="materials-card">
+          <h3>💻 Software &amp; Tools</h3>
+          <table class="materials-table">
+            <thead>
+              <tr><th>Item</th><th>Version / Notes</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Raspberry Pi OS (64-bit Lite)</td><td>Latest stable</td></tr>
+              <tr><td>Python 3</td><td>≥ 3.9</td></tr>
+              <tr><td>RPi.GPIO or gpiozero library</td><td>pip install gpiozero</td></tr>
+              <tr><td>Adafruit CircuitPython DHT</td><td>pip install adafruit-circuitpython-dht</td></tr>
+              <tr><td>smbus2 (I²C for BH1750)</td><td>pip install smbus2</td></tr>
+              <tr><td>MQTT Broker (Mosquitto)</td><td>apt install mosquitto</td></tr>
+              <tr><td>Node-RED (optional dashboard)</td><td>IoT visual programming</td></tr>
+              <tr><td>InfluxDB + Grafana (optional)</td><td>Time-series data logging &amp; charts</td></tr>
+              <tr><td>This Website</td><td>HTML / CSS / JS – no server required</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Tools -->
+        <div class="materials-card">
+          <h3>🔨 Tools You'll Need</h3>
+          <ul class="tool-list">
+            <li>🪛 Screwdriver set (Phillips &amp; flathead)</li>
+            <li>✂️ Wire stripper / cutter</li>
+            <li>🔌 Soldering iron + solder (optional, for permanent joints)</li>
+            <li>📏 Ruler or measuring tape</li>
+            <li>🔩 Drill with 6 mm bit (for drainage holes)</li>
+            <li>💻 Laptop / PC for SSH &amp; code upload</li>
+            <li>📱 Smartphone with SSH app for remote access</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────────────────────── RECIPE / BUILD GUIDE ───────────────────────── -->
+  <section id="recipe" class="section recipe-section">
+    <div class="container">
+      <h2 class="section-title">Build Guide – Balcony Garden</h2>
+      <p class="section-sub">
+        Follow these steps to assemble your IoT-powered balcony garden from
+        scratch. Allow 2–4 hours for the full setup.
+      </p>
+
+      <div class="steps-wrapper">
+
+        <div class="step-card">
+          <div class="step-number">1</div>
+          <div class="step-body">
+            <h3>Prepare the Planter Boxes</h3>
+            <ol>
+              <li>Choose a balcony railing or floor spot that receives at least <strong>6 hours of direct sunlight</strong> per day.</li>
+              <li>Drill 4–6 drainage holes (6 mm) in the bottom of each planter box if not pre-drilled.</li>
+              <li>Add a 2 cm layer of gravel or broken pottery at the base for extra drainage.</li>
+              <li>Mix potting soil with 20% perlite, then fill each box to ~5 cm from the top.</li>
+              <li>Mix in a measured dose of slow-release fertiliser granules as per package instructions.</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="step-card">
+          <div class="step-number">2</div>
+          <div class="step-body">
+            <h3>Plant Your Seeds or Seedlings</h3>
+            <ol>
+              <li>Make planting holes spaced 20–25 cm apart for most herbs; 30–40 cm for tomatoes.</li>
+              <li>Place seedlings or seeds at the recommended depth (usually 2× seed diameter).</li>
+              <li>Lightly firm soil around each plant and give an initial manual watering.</li>
+              <li>Label each plant with a small marker stick.</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="step-card">
+          <div class="step-number">3</div>
+          <div class="step-body">
+            <h3>Set Up the Irrigation System</h3>
+            <ol>
+              <li>Place the 10 L water reservoir below or beside the planter boxes.</li>
+              <li>Submerge the mini water pump in the reservoir and route the 4 mm drip tube up to the boxes.</li>
+              <li>Split the tube with a T-connector to feed both planter boxes, then insert one or two drip emitters per box near each plant's root zone.</li>
+              <li>Test the pump manually by applying 5 V directly – water should flow from all emitters.</li>
+              <li>Insert one soil moisture sensor probe into the root zone of each box; route sensor wires to the electronics enclosure.</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="step-card">
+          <div class="step-number">4</div>
+          <div class="step-body">
+            <h3>Wire the IoT Electronics</h3>
+            <ol>
+              <li>Flash Raspberry Pi OS onto the MicroSD card using <em>Raspberry Pi Imager</em>. Enable SSH and Wi-Fi in the imager settings.</li>
+              <li>Mount the Pi inside the waterproof enclosure; drill cable entry glands for sensor wires.</li>
+              <li>Connect sensors to the Pi's GPIO header:
+                <ul>
+                  <li><strong>Soil Moisture:</strong> VCC → 3.3 V, GND → GND, AOUT → ADC (or use a MCP3008 SPI ADC)</li>
+                  <li><strong>DHT22:</strong> VCC → 3.3 V, GND → GND, DATA → GPIO4 (add 10 kΩ pull-up)</li>
+                  <li><strong>BH1750:</strong> VCC → 3.3 V, GND → GND, SDA → GPIO2, SCL → GPIO3</li>
+                  <li><strong>Relay IN1:</strong> GPIO17 (controls pump)</li>
+                </ul>
+              </li>
+              <li>Wire the pump's positive lead through the relay's NO (Normally Open) terminal.</li>
+              <li>Double-check all connections with a multimeter before powering on.</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="step-card">
+          <div class="step-number">5</div>
+          <div class="step-body">
+            <h3>Install Software &amp; Configure Automation</h3>
+            <ol>
+              <li>SSH into the Pi: <code>ssh pi@&lt;your-pi-ip&gt;</code></li>
+              <li>Update the system: <code>sudo apt update &amp;&amp; sudo apt upgrade -y</code></li>
+              <li>Install Python libraries:
+                <pre><code>pip install gpiozero adafruit-circuitpython-dht smbus2</code></pre>
+              </li>
+              <li>Clone or copy the <code>PlanAPlant</code> control script to the Pi.</li>
+              <li>Edit <code>config.yaml</code> to set your thresholds (moisture trigger, watering duration, etc.).</li>
+              <li>Enable the service to run on boot:
+                <pre><code>sudo systemctl enable planaplant
+sudo systemctl start planaplant</code></pre>
+              </li>
+              <li>(Optional) Install Mosquitto MQTT broker and connect Node-RED for a live dashboard.</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="step-card">
+          <div class="step-number">6</div>
+          <div class="step-body">
+            <h3>Test &amp; Calibrate the System</h3>
+            <ol>
+              <li>Observe the <strong>Simulation Dashboard</strong> on this website to understand expected sensor ranges.</li>
+              <li>Check live sensor readings via SSH:
+                <pre><code>python3 read_sensors.py</code></pre>
+              </li>
+              <li>Dry out the soil sensor probe in open air – it should read ~10%; submerge in water – it should read ~90%.</li>
+              <li>Manually trigger the pump from the script; confirm all emitters discharge water evenly.</li>
+              <li>Adjust the moisture threshold in <code>config.yaml</code> until the pump activates at the right time for your plants.</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="step-card">
+          <div class="step-number">7</div>
+          <div class="step-body">
+            <h3>Ongoing Maintenance</h3>
+            <ol>
+              <li><strong>Weekly:</strong> Refill the water reservoir; check drip emitters for blockages.</li>
+              <li><strong>Monthly:</strong> Wipe sensor probes clean; verify relay and pump operation.</li>
+              <li><strong>Every 3 months:</strong> Top-dress with slow-release fertiliser; check wiring for corrosion.</li>
+              <li><strong>Seasonally:</strong> Swap out finished crops for new seedlings; recalibrate sensors if readings drift.</li>
+              <li>Review the event log on the dashboard to spot unusual patterns (e.g., pump running too frequently can indicate a leak or damaged sensor).</li>
+            </ol>
+          </div>
+        </div>
+
+      </div><!-- /steps-wrapper -->
+
+      <!-- System Architecture Diagram -->
+      <div class="arch-wrapper">
+        <h3>System Architecture</h3>
+        <div class="arch-diagram">
+          <div class="arch-node sensor-node">🌡️💧🌱☀️<br/><small>Sensors</small></div>
+          <div class="arch-arrow">→</div>
+          <div class="arch-node pi-node">🖥️<br/><small>Raspberry Pi</small></div>
+          <div class="arch-arrow">→</div>
+          <div class="arch-node pump-node">💦<br/><small>Pump / Relay</small></div>
+          <div class="arch-arrow">↕</div>
+          <div class="arch-node cloud-node">☁️<br/><small>MQTT / Cloud</small></div>
+          <div class="arch-arrow">→</div>
+          <div class="arch-node web-node">🌐<br/><small>This Dashboard</small></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ───────────────────────── FOOTER ───────────────────────── -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>🌱 PlanAPlant &copy; 2024 – IoT Balcony Garden Simulator</p>
+      <p class="footer-sub">
+        Open-source project. Sensor data is simulated for demonstration purposes.
+      </p>
+    </div>
+  </footer>
+
+  <script src="js/simulation.js"></script>
+</body>
+</html>
