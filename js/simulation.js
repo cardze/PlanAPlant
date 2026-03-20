@@ -283,3 +283,44 @@ simSpeed.addEventListener('change', () => {
 /* ── Initial state ───────────────────────────────────────────────────────── */
 plantDisplay.textContent = STAGES[0].emoji;
 stageLabel.textContent   = STAGES[0].label;
+
+/* ── TW Purchase Info – keyword toggle ──────────────────────────────────── */
+(function () {
+  // Table rows: click to show/hide TW search keyword row
+  document.querySelectorAll('.materials-table').forEach(function (table) {
+    table.addEventListener('click', function (e) {
+      var row = e.target.closest('tr[data-tw]');
+      if (!row) return;
+      var next = row.nextElementSibling;
+      if (next && next.classList.contains('tw-row')) {
+        next.remove();
+      } else {
+        var tr = document.createElement('tr');
+        tr.className = 'tw-row';
+        var td = document.createElement('td');
+        td.colSpan = 3;
+        td.textContent = '🔍 搜尋關鍵字：' + row.dataset.tw;
+        tr.appendChild(td);
+        row.insertAdjacentElement('afterend', tr);
+      }
+    });
+  });
+
+  // Tool list items: click to show/hide inline TW keyword span
+  var toolList = document.querySelector('.tool-list');
+  if (toolList) {
+    toolList.addEventListener('click', function (e) {
+      var li = e.target.closest('li[data-tw]');
+      if (!li) return;
+      var existing = li.querySelector('.tw-keyword');
+      if (existing) {
+        existing.remove();
+      } else {
+        var span = document.createElement('span');
+        span.className = 'tw-keyword';
+        span.textContent = '🔍 搜尋關鍵字：' + li.dataset.tw;
+        li.appendChild(span);
+      }
+    });
+  }
+}());

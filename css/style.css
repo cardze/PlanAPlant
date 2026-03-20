@@ -599,6 +599,35 @@ body {
   font-weight: 700;
 }
 
+/* ── TW Purchase Info ────────────────────────────────────────────────────── */
+.tw-stores {
+  font-size: .82rem;
+  color: var(--text-muted);
+  margin: .3rem 0 .8rem;
+}
+
+@keyframes twFadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.tw-row td {
+  background: var(--green-pale);
+  color: var(--green-dark);
+  font-size: .82rem;
+  padding: .45rem 1rem;
+  animation: twFadeIn .2s ease;
+  cursor: default;
+}
+
+.tw-keyword {
+  display: block;
+  color: var(--text-muted);
+  font-size: .8rem;
+  margin-top: .3rem;
+  animation: twFadeIn .2s ease;
+}
+
 /* ── Footer ──────────────────────────────────────────────────────────────── */
 .site-footer {
   background: var(--green-dark);
