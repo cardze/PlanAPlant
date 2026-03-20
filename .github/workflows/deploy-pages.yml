@@ -1,0 +1,61 @@
+name: Deploy Pages
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Check required site files
+        run: bash ./.github/scripts/check-required-files.sh
+
+      - name: Check JavaScript syntax
+        run: node --check js/simulation.js
+
+      - name: Validate HTML markup
+        run: npx --yes htmlhint index.html guide.html
+
+      - name: Validate CSS
+        run: npx --yes --package csstree-validator csstree-validator css/style.css
+
+      - name: Stage Pages artifact
+        run: bash ./.github/scripts/prepare-pages-artifact.sh dist
+
+      - name: Validate Pages artifact contents
+        run: bash ./.github/scripts/check-pages-artifact.sh dist
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

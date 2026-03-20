@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Check required site files
+        run: bash ./.github/scripts/check-required-files.sh
+
+      - name: Check JavaScript syntax
+        run: node --check js/simulation.js
+
+      - name: Validate HTML markup
+        run: npx --yes htmlhint index.html guide.html
+
+      - name: Validate CSS
+        run: npx --yes --package csstree-validator csstree-validator css/style.css
+
+      - name: Lint GitHub Actions workflows
+        uses: docker://rhysd/actionlint:1.7.7
+        with:
+          args: -color
+
+      - name: Stage Pages artifact
+        run: bash ./.github/scripts/prepare-pages-artifact.sh .pages-artifact
+
+      - name: Validate Pages artifact contents
+        run: bash ./.github/scripts/check-pages-artifact.sh .pages-artifact
